@@ -1,11 +1,11 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
-import config from "./firebase-config";
+import config from "../firebase-config";
 import debug from "debug";
 import omitBy from "lodash.omitby";
 import isNil from "lodash.isnil";
-import { Ingredient } from "./RecipeList";
+import { Ingredient } from "../views/pages/main/tabs/RecipeList";
 
 const log = debug("app:db");
 

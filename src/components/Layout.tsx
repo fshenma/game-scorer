@@ -17,7 +17,7 @@ export const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
             [theme.mediaQueries.md]: {
               backgroundAttachment: "fixed",
               backgroundSize: "cover",
-              backgroundImage: `url(${require("./images/cutting-board-knife.jpg")})`
+              backgroundImage: `url(${require("../images/cutting-board-knife.jpg")})`
             }
           }
         }}

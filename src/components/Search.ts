@@ -1,6 +1,6 @@
 import * as firebase from "firebase/app";
 import algoliasearch from "algoliasearch";
-import config from "./firebase-config";
+import config from "../firebase-config";
 import debug from "debug";
 
 const { projectId, ALGOLIA_APP_ID } = config;

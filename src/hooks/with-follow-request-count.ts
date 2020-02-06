@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useSession } from "../auth";
+import { useSession } from "../utils/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import * as firebase from "firebase/app";
 import debug from "debug";

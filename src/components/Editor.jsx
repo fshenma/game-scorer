@@ -1,7 +1,7 @@
 import { Editor } from "slate-react";
 import { Value } from "slate";
 import React from "react";
-import initialValue from "./value.json";
+import initialValue from "../value.json";
 import Plain from "slate-plain-serializer";
 import { isKeyHotkey } from "is-hotkey";
 import { IconButton } from "sancho";

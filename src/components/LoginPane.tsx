@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import * as React from "react";
 import { Redirect, Link } from "wouter";
-import food from "./images/food.svg";
+import food from "../images/food.svg";
 import {
   useTheme,
   Layer,
@@ -15,7 +15,7 @@ import {
   Alert,
   Container
 } from "sancho";
-import { loginWithGoogle, loginWithEmail, createUserWithEmail } from "./auth";
+import { loginWithGoogle, loginWithEmail, createUserWithEmail } from "../utils/auth";
 import queryString from "query-string";
 import { Layout } from "./Layout";
 

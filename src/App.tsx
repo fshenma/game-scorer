@@ -1,13 +1,13 @@
 /** @jsx jsx */
-import { jsx, Global } from "@emotion/core";
+import { jsx, css, Global } from "@emotion/core";
 import * as firebase from "firebase/app";
 import { Route, Redirect, useRoute } from "wouter";
-import { Login } from "./LoginPane";
-import { Branding } from "./Branding";
+import { Login } from "./components/LoginPane";
+import { Branding } from "./views/pages/Branding";
 import { Spinner } from "sancho";
-import { Main } from "./Main";
+import { Main } from "./views/pages/main/Main";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { userContext } from "./user-context";
+import { userContext } from "./components/user-context";
 import Helmet from "react-helmet";
 
 interface PrivateRouteProps {
@@ -40,13 +40,13 @@ function App() {
   if (initialising) {
     return (
       <div
-        style={{
+        css={css`
           width: "100%",
-          boxSizing: "border-box",
+          box-Sizing: "border-box",
           padding: "3rem",
-          justifyContent: "center",
+          justify-content: "center",
           display: "flex"
-        }}
+        `}
       >
         <Spinner />
       </div>

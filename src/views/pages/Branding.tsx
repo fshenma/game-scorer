@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import { jsx, Global } from "@emotion/core";
+import { jsx, css, Global } from "@emotion/core";
 import * as React from "react";
 import { Link as RouterLink } from "wouter";
-import food from "./images/food.svg";
+import food from "../../images/food.svg";
 import {
   Navbar,
   Toolbar,
@@ -26,11 +26,11 @@ export const Branding: React.FunctionComponent<BrandingProps> = () => {
   return (
     <main>
       <Global
-        styles={{
+        styles={css`
           html: {
-            backgroundColor: theme.colors.background.tint1
+            background-Color: theme.colors.background.tint1
           }
-        }}
+        `}
       />
       <Navbar
         position="fixed"
@@ -43,11 +43,11 @@ export const Branding: React.FunctionComponent<BrandingProps> = () => {
         <Toolbar>
           <Text
             variant="h5"
-            css={{
-              alignItems: "center",
+            css={css`
+              align-items: "center",
               display: "flex",
               color: "#43596c"
-            }}
+            `}
             gutter={false}
           >
             <img
@@ -86,7 +86,7 @@ export const Branding: React.FunctionComponent<BrandingProps> = () => {
             background: "white",
             [theme.mediaQueries.md]: {
               backgroundSize: "cover",
-              backgroundImage: `url(${require("./images/cutting-board-knife.jpg")})`
+              backgroundImage: `url(${require("../../images/cutting-board-knife.jpg")})`
             }
           },
           responsiveBodyPadding

@@ -21,17 +21,17 @@ import {
   LightMode,
   Pager
 } from "sancho";
-import { RecipeList } from "./RecipeList";
-import { useFollowRequests } from "./hooks/with-follow-request-count";
-import { FollowersList } from "./FollowersList";
-import { FollowingList } from "./FollowingList";
-import { useSession, signOut } from "./auth";
-import { Compose } from "./Compose";
-import { Recipe } from "./Recipe";
-import { SearchBox } from "./SearchBox";
+import { RecipeList } from "./tabs/RecipeList";
+import { useFollowRequests } from "../../../hooks/with-follow-request-count";
+import { FollowersList } from "./tabs/FollowersList";
+import { FollowingList } from "./tabs/FollowingList";
+import { useSession, signOut } from "../../../utils/auth";
+import { Compose } from "../../../components/Compose";
+import { Recipe } from "./components/Recipe";
+import { SearchBox } from "../../../components/SearchBox";
 import { Link, useRoute } from "wouter";
 import { useMedia } from "use-media";
-import { Layout } from "./Layout";
+import { Layout } from "../../../components/Layout";
 
 export interface MainProps {
   path?: string;

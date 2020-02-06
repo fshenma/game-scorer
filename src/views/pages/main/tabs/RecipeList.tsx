@@ -2,10 +2,10 @@
 import { jsx } from "@emotion/core";
 import * as React from "react";
 import algoliasearch from "algoliasearch";
-import algolia from "./Search";
+import algolia from "../../../../components/Search";
 import debug from "debug";
 import { Link, useRoute, useLocation } from "wouter";
-import { useSession } from "./auth";
+import { useSession } from "../../../../utils/auth";
 import * as firebase from "firebase/app";
 import orderBy from "lodash.orderby";
 import {
@@ -18,8 +18,8 @@ import {
   Embed,
   Skeleton
 } from "sancho";
-import { useFirebaseImage } from "./Image";
-import { FadeImage } from "./FadeImage";
+import { useFirebaseImage } from "../../../../components/Image";
+import { FadeImage } from "../../../../components/FadeImage";
 import usePaginateQuery from "firestore-pagination-hook";
 const log = debug("app:RecipeList");
 

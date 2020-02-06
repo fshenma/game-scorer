@@ -6,8 +6,8 @@ import { ImageUpload } from "./ImageUpload";
 import { Image } from "./Image";
 import { Value } from "slate";
 import debug from "debug";
-import initialValue from "./value.json";
-import { Ingredient } from "./RecipeList";
+import initialValue from "../value.json";
+import { Ingredient } from "../views/pages/main/tabs/RecipeList";
 import {
   Navbar,
   Toolbar,
@@ -28,8 +28,8 @@ import {
   IconArrowLeft,
   Tooltip
 } from "sancho";
-import { getUserFields, createEntry, deleteEntry, updateEntry } from "./db";
-import { useSession } from "./auth";
+import { getUserFields, createEntry, deleteEntry, updateEntry } from "../utils/db";
+import { useSession } from "../utils/auth";
 import Helmet from "react-helmet";
 import { Link, useLocation } from "wouter";
 

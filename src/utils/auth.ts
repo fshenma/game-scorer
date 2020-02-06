@@ -1,7 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { useContext } from "react";
-import { userContext } from "./user-context";
+import { userContext } from "../components/user-context";
 
 const provider = new firebase.auth.GoogleAuthProvider();
 

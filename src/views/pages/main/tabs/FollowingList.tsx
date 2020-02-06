@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import * as React from "react";
-import { useFollowers } from "./hooks/with-follow-request-count";
+import { useFollowers } from "../../../../hooks/with-follow-request-count";
 import {
   List,
   ListItem,
@@ -21,14 +21,14 @@ import {
   StackTitle,
   Skeleton
 } from "sancho";
-import { SearchBox } from "./SearchBox";
+import { SearchBox } from "../../../../components/SearchBox";
 import debug from "debug";
 import algoliasearch from "algoliasearch";
-import config from "./firebase-config";
-import { useSession } from "./auth";
+import config from "../../../../firebase-config";
+import { useSession } from "../../../../utils/auth";
 import find from "lodash.find";
-import { deleteRequestFollow, requestFollow } from "./db";
-import { FollowingRecipes } from "./FollowingRecipes";
+import { deleteRequestFollow, requestFollow } from "../../../../utils/db";
+import { FollowingRecipes } from "../components/FollowingRecipes";
 import { User } from "firebase";
 import { StackItem, StackContext } from "react-gesture-stack";
 import { animated } from "react-spring";

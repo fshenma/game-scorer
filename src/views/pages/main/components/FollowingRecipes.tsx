@@ -12,7 +12,7 @@ import {
   ListItem,
   Skeleton
 } from "sancho";
-import { RecipeListItem, Recipe } from "./RecipeList";
+import { RecipeListItem, Recipe } from "../tabs/RecipeList";
 
 export interface FollowingRecipesProps {
   id: string;
