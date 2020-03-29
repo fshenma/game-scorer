@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import { jsx, Global } from "@emotion/core";
 import * as React from "react";
-import Editor, { tryValue } from "./Editor";
-import { ImageUpload } from "./ImageUpload";
-import { Image } from "./Image";
+import Editor, { tryValue } from "../../components/Editor";
+import { ImageUpload } from "../../components/ImageUpload";
+import { Image } from "../../components/Image";
 import { Value } from "slate";
 import debug from "debug";
-import initialValue from "../value.json";
-import { Ingredient } from "../views/pages/main/tabs/RecipeList";
+import {Game, Opponent} from "../../models/Game";
+import initialValue from "../../value.json";
+// import { Opponent } from "./tabs/GameList";
 import {
   Navbar,
   Toolbar,
@@ -28,8 +29,8 @@ import {
   IconArrowLeft,
   Tooltip
 } from "sancho";
-import { getUserFields, createEntry, deleteEntry, updateEntry } from "../utils/db";
-import { useSession } from "../utils/auth";
+import { getUserFields, createEntry, deleteEntry, updateEntry } from "../../utils/db";
+import { useSession } from "../../utils/auth";
 import Helmet from "react-helmet";
 import { Link, useLocation } from "wouter";
 
@@ -46,7 +47,7 @@ export interface ComposeProps {
   defaultTitle?: string;
   defaultImage?: string;
   defaultDescription?: string;
-  defaultIngredients?: Ingredient[];
+  defaultOpponents?: Opponent[];
   readOnly?: boolean;
   editable?: boolean;
   defaultCredit?: string;
@@ -64,7 +65,7 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
   defaultCredit = "",
   defaultDescription,
   defaultImage,
-  defaultIngredients,
+  defaultOpponents,
   defaultTitle = ""
 }) => {
   const theme = useTheme();
@@ -81,67 +82,48 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
   const [image, setImage] = React.useState(defaultImage);
   const [title, setTitle] = React.useState(defaultTitle);
   const [credit, setCredit] = React.useState(defaultCredit);
-  const [ingredients, setIngredients] = React.useState<Ingredient[]>(
-    defaultIngredients || [
+  const [Opponents, setOpponents] = React.useState<Opponent[]>(
+    defaultOpponents || [
       {
         name: "",
-        amount: ""
+        score: ""
       }
     ]
   );
   const [, setLocation] = useLocation();
 
-  const [hoverIngredient, setHoverIngredient] = React.useState(null);
-  const hoverIngredientRef = React.useRef(hoverIngredient);
+  const [hoverOpponent, setHoverOpponent] = React.useState(null);
+  const hoverIngredientRef = React.useRef(hoverOpponent);
 
   React.useEffect(() => {
-    hoverIngredientRef.current = hoverIngredient;
-  }, [hoverIngredient]);
+    hoverIngredientRef.current = hoverOpponent;
+  }, [hoverOpponent]);
 
-  function onIngredientChange(i: number, value: Ingredient) {
-    ingredients[i] = value;
-    log("on ingredient change: %o", ingredients);
-    setIngredients([...ingredients]);
+  function onOpponentChange(i: number, value: Opponent) {
+    Opponents[i] = value;
+    log("on ingredient change: %o", Opponents);
+    setOpponents([...Opponents]);
   }
 
-  function addNewIngredient() {
-    ingredients.push({ name: "", amount: "" });
-    setIngredients([...ingredients]);
+  function addNewOpponent() {
+    Opponents.push({ name: "", score: "" });
+    setOpponents([...Opponents]);
   }
 
-  function removeIngredient(i: number) {
-    ingredients.splice(i, 1);
-    setIngredients([...ingredients]);
+  function removeOpponent(i: number) {
+    Opponents.splice(i, 1);
+    setOpponents([...Opponents]);
   }
 
-  async function saveRecipe({
-    title,
-    plain,
-    ingredients,
-    description,
-    author,
-    image
-  }: {
-    title: string;
-    plain: string;
-    ingredients: Ingredient[];
-    description: string;
-    author: string;
-    image: string;
-  }) {
+  async function saveGame(newGame: Game) {
     log("create entry");
 
     try {
       setLoading(true);
-      const entry = await createEntry({
-        title,
-        plain,
-        userId: user.uid,
-        description,
+      const entry = await createEntry({...newGame,         
+        userId: user.uid,        
         createdBy: getUserFields(user),
-        ingredients: ingredients.filter(ing => ing.name),
-        image,
-        author
+        Opponents: Opponents.filter(ing => ing.name),                  
       });
       setLocation("/" + entry.id, { replace: true });
     } catch (err) {
@@ -155,35 +137,17 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
     }
   }
 
-  async function updateRecipe(
+  async function updateGame(
     id: string,
-    {
-      title,
-      plain,
-      ingredients,
-      description,
-      author,
-      image
-    }: {
-      title: string;
-      plain: string;
-      ingredients: Ingredient[];
-      description: string;
-      author: string;
-      image: string;
-    }
+    game: Game
   ) {
     log("update entry: %s", id);
     setLoading(true);
     try {
       await updateEntry(id, {
-        title,
-        plain,
-        description,
+        ...game,
         createdBy: getUserFields(user),
-        ingredients: ingredients.filter(ing => ing.name),
-        image,
-        author
+        Opponents: Opponents.filter(ing => ing.name)
       });
       setEditing(false);
     } catch (err) {
@@ -219,7 +183,7 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
       for (const [node, path] of document.texts()) {
         const { key, text } = node;
 
-        ingredients.forEach(ing => {
+        Opponents.forEach(ing => {
           const normalized = ing.name.toLowerCase();
           const parts = text.toLowerCase().split(normalized);
           let offset = 0;
@@ -302,7 +266,7 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
         }
       }}
     >
-      <Helmet title={title ? title : "New Recipe"} />
+      <Helmet title={title ? title : "New Game"} />
       <Global
         styles={{
           ".Editor": {
@@ -385,8 +349,8 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
                 autoFocus
                 inputSize="lg"
                 value={title}
-                placeholder="Recipe title"
-                aria-label="Recipe title"
+                placeholder="Game title"
+                aria-label="Game title"
                 onChange={e => {
                   setTitle(e.target.value);
                 }}
@@ -461,12 +425,12 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
                     title,
                     description: content,
                     plain: text,
-                    ingredients,
+                    Opponents,
                     author: credit,
                     image
                   };
 
-                  id ? updateRecipe(id, toSave) : saveRecipe(toSave);
+                  id ? updateGame(id, toSave) : saveGame(toSave);
                 }}
               >
                 Save
@@ -483,40 +447,21 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
           }
         }}
       >
-        <div>
-          {editing ? (
-            <ImageUpload
-              onRequestSave={id => setImage(id)}
-              onRequestClear={() => setImage(null)}
-              defaultFiles={
-                image
-                  ? [
-                      {
-                        source: image,
-                        options: {
-                          type: "local"
-                        }
-                      }
-                    ]
-                  : []
-              }
-            />
-          ) : image ? (
-            <Image alt={title} id={image} />
-          ) : null}
+        <div>          
 
           <Container>
+
             <div
               css={{
                 paddingTop: theme.spaces.lg,
                 paddingBottom: theme.spaces.lg
               }}
             >
-              {ingredients.length > 0 && (
+              {Opponents.length > 0 && (
                 <div>
-                  <Text variant="h5">Ingredients</Text>
-                  {ingredients.map((ingredient, i) => {
-                    const activeHover = ingredient == hoverIngredient;
+                  <Text variant="h5">Teams</Text>
+                  {Opponents.map((ingredient, i) => {
+                    const activeHover = ingredient == hoverOpponent;
 
                     return (
                       <div key={i}>
@@ -524,9 +469,9 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
                           <Contain>
                             <div
                               onMouseEnter={() =>
-                                setHoverIngredient(ingredient)
+                                setHoverOpponent(ingredient)
                               }
-                              onMouseLeave={() => setHoverIngredient(null)}
+                              onMouseLeave={() => setHoverOpponent(null)}
                               css={{
                                 backgroundColor: activeHover
                                   ? theme.colors.palette.blue.lightest
@@ -538,23 +483,23 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
                               }}
                             >
                               <TransparentInput
-                                autoFocus={!readOnly && ingredients.length > 1}
+                                autoFocus={!readOnly && Opponents.length > 1}
                                 placeholder="Name"
                                 value={ingredient.name}
                                 onChange={e => {
-                                  onIngredientChange(i, {
+                                  onOpponentChange(i, {
                                     ...ingredient,
                                     name: e.target.value
                                   });
                                 }}
                               />
                               <TransparentInput
-                                placeholder="Amount"
-                                value={ingredient.amount}
+                                placeholder="Score"
+                                value={ingredient.score}
                                 onChange={e => {
-                                  onIngredientChange(i, {
+                                  onOpponentChange(i, {
                                     ...ingredient,
-                                    amount: e.target.value
+                                    score: e.target.value
                                   });
                                 }}
                               />
@@ -568,8 +513,8 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
                                   <IconButton
                                     variant="ghost"
                                     icon={<IconX />}
-                                    label="Delete ingredient"
-                                    onPress={() => removeIngredient(i)}
+                                    label="Delete Score"
+                                    onPress={() => removeOpponent(i)}
                                   />
                                 )}
                               </div>
@@ -577,8 +522,8 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
                           </Contain>
                         ) : (
                           <div
-                            onMouseEnter={() => setHoverIngredient(ingredient)}
-                            onMouseLeave={() => setHoverIngredient(null)}
+                            onMouseEnter={() => setHoverOpponent(ingredient)}
+                            onMouseLeave={() => setHoverOpponent(null)}
                             css={{
                               backgroundColor: activeHover
                                 ? theme.colors.palette.blue.lightest
@@ -623,7 +568,7 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
                                   : "white"
                               }}
                             >
-                              {ingredient.amount}
+                              {ingredient.score}
                             </Text>
                           </div>
                         )}
@@ -637,14 +582,14 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
                 <Button
                   css={{ marginTop: theme.spaces.sm }}
                   size="sm"
-                  onPress={addNewIngredient}
+                  onPress={addNewOpponent}
                 >
                   Add another
                 </Button>
               )}
 
               <div css={{ marginTop: theme.spaces.lg }}>
-                <Text variant="h5">Instructions</Text>
+                <Text variant="h5">Notes</Text>
                 <div>
                   <Editor
                     ref={ref}
@@ -685,6 +630,28 @@ export const Compose: React.FunctionComponent<ComposeProps> = ({
               </div>
             </div>
           </Container>
+        
+          {editing ? (
+            <ImageUpload
+              onRequestSave={id => setImage(id)}
+              onRequestClear={() => setImage(null)}
+              defaultFiles={
+                image
+                  ? [
+                      {
+                        source: image,
+                        options: {
+                          type: "local"
+                        }
+                      }
+                    ]
+                  : []
+              }
+            />
+          ) : image ? (
+            <Image alt={title} id={image} />
+          ) : null}
+        
         </div>
       </div>
       <LayerLoading loading={loading} />

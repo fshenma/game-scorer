@@ -5,7 +5,7 @@ import config from "../firebase-config";
 import debug from "debug";
 import omitBy from "lodash.omitby";
 import isNil from "lodash.isnil";
-import { Ingredient } from "../views/pages/main/tabs/RecipeList";
+import { Opponent } from "../models/Game";
 
 const log = debug("app:db");
 
@@ -65,7 +65,7 @@ export const confirmFollow = (id: string) => {
     .update({ confirmed: true });
 };
 
-export interface RecipeOptions {
+export interface GameOptions {
   title: string;
   plain: string;
   userId: string;
@@ -76,12 +76,12 @@ export interface RecipeOptions {
     photoURL: string;
   };
   author: string;
-  ingredients: Ingredient[];
+  Opponents: Opponent[];
 }
 
-export const createEntry = (options: RecipeOptions) => {
-  log("save recipe: %o", options);
-  return db.collection("recipes").add({
+export const createEntry = (options: GameOptions) => {
+  log("save game: %o", options);
+  return db.collection("scores").add({
     ...omitBy(options, isNil),
     updatedAt: firebase.firestore.Timestamp.fromDate(new Date())
   });
@@ -97,12 +97,12 @@ interface RecipeUpdateOptions {
     photoURL: string;
   };
   plain: string;
-  ingredients: Ingredient[];
+  Opponents: Opponent[];
 }
 
 export const updateEntry = (id: string, options: RecipeUpdateOptions) => {
   return db
-    .collection("recipes")
+    .collection("scores")
     .doc(id)
     .update({
       ...omitBy(options, isNil),
@@ -113,7 +113,7 @@ export const updateEntry = (id: string, options: RecipeUpdateOptions) => {
 export const deleteEntry = (id: string) => {
   log("delete: %s", id);
   return db
-    .collection("recipes")
+    .collection("scores")
     .doc(id)
     .delete();
 };

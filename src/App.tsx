@@ -3,9 +3,9 @@ import { jsx, css, Global } from "@emotion/core";
 import * as firebase from "firebase/app";
 import { Route, Redirect, useRoute } from "wouter";
 import { Login } from "./components/LoginPane";
-import { Branding } from "./views/pages/Branding";
+import { Branding } from "./pages/Branding";
 import { Spinner } from "sancho";
-import { Main } from "./views/pages/main/Main";
+import { Main } from "./pages/main/Main";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { userContext } from "./components/user-context";
 import Helmet from "react-helmet";
@@ -69,7 +69,7 @@ function App() {
         }}
       />
       <div className="App">
-        <Helmet titleTemplate="%s | Julienne" defaultTitle="Julienne" />
+        <Helmet titleTemplate="%s | Game Scorer" defaultTitle="Game Scorer" />
 
         {!user && <Route path="/" component={Branding} />}
         <Route path="/login" component={Login} />

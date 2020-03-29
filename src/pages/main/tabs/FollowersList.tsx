@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import * as React from "react";
-import { useFollowers } from "../../../../hooks/with-follow-request-count";
+import { useFollowers } from "../../../hooks/with-follow-request-count";
 import {
   List,
   ListItem,
@@ -17,7 +17,7 @@ import {
   IconMoreVertical,
   Skeleton
 } from "sancho";
-import { confirmFollow, deleteRequestFollow } from "../../../../utils/db";
+import { confirmFollow, deleteRequestFollow } from "../../../utils/db";
 
 export interface FollowersListProps {}
 

@@ -19,7 +19,7 @@ export interface SearchBoxProps {
 
 export const SearchBox: React.FunctionComponent<SearchBoxProps> = ({
   query,
-  label = "Search all recipes",
+  label = "Search all games",
   setQuery,
   ...other
 }) => {

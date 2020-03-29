@@ -2,7 +2,7 @@
 import { jsx, css, Global } from "@emotion/core";
 import * as React from "react";
 import { Link as RouterLink } from "wouter";
-import food from "../../images/food.svg";
+import food from "../images/food.svg";
 import {
   Navbar,
   Toolbar,
@@ -86,7 +86,7 @@ export const Branding: React.FunctionComponent<BrandingProps> = () => {
             background: "white",
             [theme.mediaQueries.md]: {
               backgroundSize: "cover",
-              backgroundImage: `url(${require("../../images/cutting-board-knife.jpg")})`
+              backgroundImage: `url(${require("../images/cutting-board-knife.jpg")})`
             }
           },
           responsiveBodyPadding

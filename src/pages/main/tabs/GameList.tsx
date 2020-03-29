@@ -2,10 +2,10 @@
 import { jsx } from "@emotion/core";
 import * as React from "react";
 import algoliasearch from "algoliasearch";
-import algolia from "../../../../components/Search";
+// import algolia from "../../../components/Search";
 import debug from "debug";
 import { Link, useRoute, useLocation } from "wouter";
-import { useSession } from "../../../../utils/auth";
+import { useSession } from "../../../utils/auth";
 import * as firebase from "firebase/app";
 import orderBy from "lodash.orderby";
 import {
@@ -18,19 +18,20 @@ import {
   Embed,
   Skeleton
 } from "sancho";
-import { useFirebaseImage } from "../../../../components/Image";
-import { FadeImage } from "../../../../components/FadeImage";
+import {Opponent} from "../../../models/Game"
+import { useFirebaseImage } from "../../../components/Image";
+import { FadeImage } from "../../../components/FadeImage";
 import usePaginateQuery from "firestore-pagination-hook";
-const log = debug("app:RecipeList");
+const log = debug("app:GameList");
 
-export interface Ingredient {
-  name: string;
-  amount: string;
-}
+// export interface Opponent {
+//   name: string;
+//   score: string;
+// }
 
 type Action<K, V = void> = V extends void ? { type: K } : { type: K } & V;
 
-export interface Recipe {
+export interface Game {
   id: string;
   title: string;
   plain: string;
@@ -43,7 +44,7 @@ export interface Recipe {
   };
   author: string;
   description: string;
-  ingredients: Ingredient[];
+  Opponents: Opponent[];
 }
 
 export type ActionType =
@@ -76,11 +77,11 @@ function reducer(state: StateType, action: ActionType) {
   }
 }
 
-export interface RecipeListProps {
+export interface GameListProps {
   query: string;
 }
 
-export const RecipeList: React.FunctionComponent<RecipeListProps> = ({
+export const GameList: React.FunctionComponent<GameListProps> = ({
   query
 }) => {
   const theme = useTheme();
@@ -98,7 +99,7 @@ export const RecipeList: React.FunctionComponent<RecipeListProps> = ({
   } = usePaginateQuery(
     firebase
       .firestore()
-      .collection("recipes")
+      .collection("scores")
       .where("userId", "==", user!.uid)
       .orderBy("updatedAt", "desc"),
     {
@@ -110,20 +111,20 @@ export const RecipeList: React.FunctionComponent<RecipeListProps> = ({
   React.useEffect(() => {
     if (query) {
       log("query: %s", query);
-      algolia.search(query).then(results => {
-        log("results: %o", results);
-        dispatch({
-          type: "SEARCH",
-          value: results
-        });
-      });
+      // algolia.search(query).then(results => {
+      //   log("results: %o", results);
+      //   dispatch({
+      //     type: "SEARCH",
+      //     value: results
+      //   });
+      // });
     }
   }, [query]);
 
   // retrieve our algolia search index on mount
-  React.useEffect(() => {
-    algolia.getIndex();
-  }, []);
+  // React.useEffect(() => {
+  //   // algolia.getIndex();
+  // }, []);
 
   return (
     <div>
@@ -131,10 +132,10 @@ export const RecipeList: React.FunctionComponent<RecipeListProps> = ({
         <div>
           <List>
             {state.searchResponse.hits.map(hit => (
-              <RecipeListItem
+              <GameListItem
                 key={hit.objectID}
                 editable={hit.userId === user!.uid}
-                recipe={hit}
+                game={hit}
                 id={hit.objectID}
                 highlight={hit._highlightResult}
               />
@@ -192,12 +193,12 @@ export const RecipeList: React.FunctionComponent<RecipeListProps> = ({
               items,
               item => item.get("updatedAt").toMillis(),
               "desc"
-            ).map(recipe => (
-              <RecipeListItem
-                id={recipe.id}
-                key={recipe.id}
+            ).map(g => (
+              <GameListItem
+                id={g.id}
+                key={g.id}
                 editable
-                recipe={recipe.data() as Recipe}
+                game={g.data() as Game}
               />
             ))}
           </List>
@@ -228,16 +229,16 @@ export const RecipeList: React.FunctionComponent<RecipeListProps> = ({
   );
 };
 
-interface RecipeListItemProps {
+interface GameListItemProps {
   editable?: boolean;
-  recipe: Recipe;
+  game: Game;
   id: string;
   highlight?: any;
 }
 
-export function RecipeListItem({ recipe, id, highlight }: RecipeListItemProps) {
+export function GameListItem({ game, id, highlight }: GameListItemProps) {
   const theme = useTheme();
-  const { src, error } = useFirebaseImage("thumb-sm@", recipe.image);
+  const { src, error } = useFirebaseImage("thumb-sm@", game.image);
   const href = `/${id}`;
   const [isActive] = useRoute(href);
   const [, setLocation] = useLocation();
@@ -269,7 +270,7 @@ export function RecipeListItem({ recipe, id, highlight }: RecipeListItemProps) {
         }
       }}
       contentAfter={
-        recipe.image && !error ? (
+        game.image && !error ? (
           <Embed css={{ width: "60px" }} width={75} height={50}>
             <FadeImage src={src} hidden />
           </Embed>
@@ -286,7 +287,7 @@ export function RecipeListItem({ recipe, id, highlight }: RecipeListItemProps) {
         highlight ? (
           <span dangerouslySetInnerHTML={{ __html: highlight.title.value }} />
         ) : (
-          recipe.title
+          game.title
         )
       }
     />

@@ -21,17 +21,17 @@ import {
   LightMode,
   Pager
 } from "sancho";
-import { RecipeList } from "./tabs/RecipeList";
-import { useFollowRequests } from "../../../hooks/with-follow-request-count";
+import { GameList } from "./tabs/GameList";
+import { useFollowRequests } from "../../hooks/with-follow-request-count";
 import { FollowersList } from "./tabs/FollowersList";
 import { FollowingList } from "./tabs/FollowingList";
-import { useSession, signOut } from "../../../utils/auth";
-import { Compose } from "../../../components/Compose";
-import { Recipe } from "./components/Recipe";
-import { SearchBox } from "../../../components/SearchBox";
+import { useSession, signOut } from "../../utils/auth";
+import { Compose } from "./Compose";
+import { Game } from "./components/Game";
+// import { SearchBox } from "../../components/SearchBox";
 import { Link, useRoute } from "wouter";
 import { useMedia } from "use-media";
-import { Layout } from "../../../components/Layout";
+import { Layout } from "../../components/Layout";
 
 export interface MainProps {
   path?: string;
@@ -46,8 +46,8 @@ export const Main: React.FunctionComponent<MainProps> = props => {
   const { value: followRequests } = useFollowRequests();
   const isLarge = useMedia({ minWidth: "768px" });
 
-  const [, params] = useRoute("/:recipe*");
-  const showingRecipe = params.recipe;
+  const [, params] = useRoute("/:game*");
+  const showingGame = params.game;
 
   // i'm disabling this for now, since it was running really poorly. unsure
   // whats up here.
@@ -59,7 +59,7 @@ export const Main: React.FunctionComponent<MainProps> = props => {
   //   immediate: !isLarge
   // });
 
-  const renderList = isLarge || !showingRecipe;
+  const renderList = isLarge || !showingGame;
 
   return (
     <Layout>
@@ -153,14 +153,14 @@ export const Main: React.FunctionComponent<MainProps> = props => {
                     </DarkMode>
                   </ResponsivePopover>
                 </LightMode>
-                <Tooltip content="Add a new recipe">
+                <Tooltip content="Add a new game">
                   <div>
                     <DarkMode>
                       <IconButton
                         component={Link}
                         to="/new"
                         variant="ghost"
-                        label="Add recipe"
+                        label="Add game"
                         size="md"
                         icon={<IconPlus />}
                       />
@@ -181,8 +181,8 @@ export const Main: React.FunctionComponent<MainProps> = props => {
                   value={activeTab}
                   variant="evenly-spaced"
                 >
-                  <Tab id="recipes">Recipes</Tab>
-                  <Tab id="following">Following</Tab>
+                  <Tab id="games">Games</Tab>
+                  <Tab id="following">Practices</Tab>
                   <Tab
                     badge={
                       followRequests && followRequests.docs.length
@@ -219,14 +219,14 @@ export const Main: React.FunctionComponent<MainProps> = props => {
                 flex: 1,
                 minHeight: 0
               }}
-              id="recipes"
+              id="games"
             >
               <div
                 css={{
                   flex: "0 0 auto"
                 }}
               >
-                <SearchBox query={query} setQuery={setQuery} />
+                {/* <SearchBox query={query} setQuery={setQuery} /> */}
               </div>
 
               <div
@@ -238,7 +238,7 @@ export const Main: React.FunctionComponent<MainProps> = props => {
                   }
                 }}
               >
-                <RecipeList query={query} />
+                <GameList query={query} />
               </div>
             </TabPanel>
             <TabPanel css={{ height: "100%" }} id="following">
@@ -250,7 +250,7 @@ export const Main: React.FunctionComponent<MainProps> = props => {
           </Pager>
         </Layer>
 
-        {showingRecipe && (
+        {showingGame && (
           <div
             css={{
               display: "block",
@@ -303,7 +303,7 @@ export const Main: React.FunctionComponent<MainProps> = props => {
                   }
                 }}
               >
-                <MainContent id={showingRecipe} />
+                <MainContent id={showingGame} />
               </Layer>
             </div>
           </div>
@@ -326,5 +326,5 @@ function MainContent({ id }: MainContentProps) {
     return <Compose />;
   }
 
-  return <Recipe id={id} />;
+  return <Game id={id} />;
 }

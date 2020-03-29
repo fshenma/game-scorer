@@ -15,7 +15,7 @@
       ]
     },
     {
-      "collectionGroup": "recipes",
+      "collectionGroup": "scores",
       "queryScope": "COLLECTION",
       "fields": [
         {

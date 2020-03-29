@@ -12,7 +12,7 @@ import {
   ListItem,
   Skeleton
 } from "sancho";
-import { RecipeListItem, Recipe } from "../tabs/RecipeList";
+import { GameListItem, Game } from "../tabs/GameList";
 
 export interface FollowingRecipesProps {
   id: string;
@@ -87,12 +87,12 @@ export const FollowingRecipes: React.FunctionComponent<
             />
           </React.Fragment>
         )}
-        {items.map(recipe => (
-          <RecipeListItem
-            id={recipe.id}
-            key={recipe.id}
+        {items.map(g => (
+          <GameListItem
+            id={g.id}
+            key={g.id}
             editable
-            recipe={recipe.data() as Recipe}
+            game={g.data() as Game}
           />
         ))}
       </List>
